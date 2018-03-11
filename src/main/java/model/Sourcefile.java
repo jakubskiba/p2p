@@ -2,12 +2,9 @@ package model;
 
 import service.FileDivider;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
-public class Sourcefile {
+public class Sourcefile implements Serializable {
     private File file;
     private String sha256;
 
@@ -26,16 +23,6 @@ public class Sourcefile {
         return file.toString() + " " + sha256;
     }
 
-    public static void main(String[] args) {
-        try {
-            Sourcefile sourcefile = new Sourcefile(new File("/home/kyubu/DSC08863.JPG"));
-            Chunk chunk = new FileDivider(sourcefile).createChunk(0, 1024);
-            System.out.println(chunk.isValid());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public String computeSHA() throws IOException {
         Process p = Runtime.getRuntime().exec("sha256sum "+this.file.getCanonicalPath());
         BufferedReader stdInput = new BufferedReader(new
@@ -50,4 +37,5 @@ public class Sourcefile {
     public String getSha256() {
         return sha256;
     }
+
 }

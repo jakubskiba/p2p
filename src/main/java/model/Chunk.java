@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public class Chunk {
+public class Chunk implements Serializable {
     private Sourcefile sourcefile;
     private byte[] chunkSHA256;
     private long from;
