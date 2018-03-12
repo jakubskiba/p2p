@@ -27,7 +27,10 @@ public class App {
         }
 
         //merge file
-        new FileMerger().mergeChunks(sourcefile.getSha256(), toPath);
+        if(chunkManager.hasAllChunks(sourcefile)) {
+            new FileMerger().mergeChunks(sourcefile.getSha256(), toPath);
+        }
+
 
     }
 
