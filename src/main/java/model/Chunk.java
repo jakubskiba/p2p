@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class Chunk implements Serializable {
+    private static final long serialVersionUID = 5166075077057977388L;
     private Sourcefile sourcefile;
     private byte[] chunkSHA256;
     private int chunkId;

@@ -6,6 +6,7 @@ import java.io.*;
 
 public class Sourcefile implements Serializable {
     private static final int CHUNK_SIZE = 1024;
+    private static final long serialVersionUID = 7870891426733885536L;
 
     private File file;
     private int chunkSize;
