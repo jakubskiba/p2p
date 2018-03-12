@@ -1,58 +1,55 @@
-import model.ChunkContainer;
+import model.Chunk;
 import model.Sourcefile;
 import service.FileDivider;
+import service.FileMerger;
 
-import java.io.*;
-import java.util.TreeMap;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class App {
     private static final int CHUNK_SIZE = 1024;
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         String fromPath = "/home/kyubu/DSC08863.JPG";
         String toPath = "/home/kyubu/DSC08863-x.JPG";
-        String chunkContainerPath = "/home/kyubu/cc.ser";
 
         File file = new File(fromPath);
         Sourcefile sourcefile = new Sourcefile(file);
 
-        FileDivider fileDivider = new FileDivider(sourcefile);
-        ChunkContainer chunkContainer;
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(chunkContainerPath)));
-            chunkContainer = (ChunkContainer) ois.readObject();
-            System.out.println("cc loaded from file");
-        } catch (FileNotFoundException e) {
-            chunkContainer = new ChunkContainer(new TreeMap<>(), sourcefile);
-            System.out.println("cc created");
+        File chunksDir = new File(".chunks/");
+        if(!chunksDir.exists()) {
+            chunksDir.mkdir();
+        }
+
+        File directory = new File(".chunks/" + sourcefile.getSha256() +"/");
+        if(!directory.exists()) {
+            directory.mkdir();
         }
 
         int chunkAmount = (int) sourcefile.getFile().length() / CHUNK_SIZE;
 
-        int changeThisVariableTo0And1 = 0;
+        //divide file
+        FileDivider fileDivider = new FileDivider(sourcefile);
 
+        for(Integer i = 0; i<chunkAmount; i++) {
 
-        //Simulation of incomplete transfer
-        for(int i = 0; i<chunkAmount; i++) {
-            if(i % 2 == changeThisVariableTo0And1) {
-//                System.out.println(i);
-                long from = getOffset(i);
-                long to = getOffset(i) + CHUNK_SIZE;
-                chunkContainer.addChunk(fileDivider.createChunk(from, to));
-            }
+            long from = getOffset(i);
+            long to = getOffset(i) + CHUNK_SIZE;
+
+            File chunkFile = new File(directory.getCanonicalPath() + "/" + i.toString());
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chunkFile));
+            Chunk chunk = fileDivider.createChunk(from, to);
+            oos.writeObject(chunk);
+            oos.close();
         }
 
-        //run second time and change variable from line 31 to 1 to fullify file
+        //merge file
+        new FileMerger().mergeChunks(sourcefile.getSha256(), toPath);
 
-        System.out.println(chunkContainer.isFullified());
-
-        byte[] data = chunkContainer.merge();
-
-        FileOutputStream fileOutputStream = new FileOutputStream(new File(toPath));
-        fileOutputStream.write(data);
-
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(chunkContainerPath)));
-        oos.writeObject(chunkContainer);
     }
+
+
 
     private static int getOffset(int chunkNo) {
         return chunkNo * CHUNK_SIZE;
