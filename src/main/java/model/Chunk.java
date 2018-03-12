@@ -8,15 +8,13 @@ import java.util.Arrays;
 public class Chunk implements Serializable {
     private Sourcefile sourcefile;
     private byte[] chunkSHA256;
-    private long from;
-    private long to;
+    private int chunkId;
     private byte[] data;
 
-    public Chunk(Sourcefile sourcefile, byte[] chunkSHA256, long from, long to, byte[] data) {
+    public Chunk(Sourcefile sourcefile, byte[] chunkSHA256, byte[] data, Integer chunkId) {
         this.sourcefile = sourcefile;
         this.chunkSHA256 = chunkSHA256;
-        this.from = from;
-        this.to = to;
+        this.chunkId = chunkId;
         this.data = data;
     }
 
@@ -38,12 +36,8 @@ public class Chunk implements Serializable {
         return chunkSHA256;
     }
 
-    public long getFrom() {
-        return from;
-    }
-
-    public long getTo() {
-        return to;
+    public int getChunkId() {
+        return chunkId;
     }
 
     public byte[] getData() {

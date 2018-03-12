@@ -14,7 +14,7 @@ public class FileDivider {
         this.sourcefile = sourcefile;
     }
 
-    public byte[] getChunk(long offset, int chunkSize) throws IOException {
+    private byte[] getChunk(long offset, int chunkSize) throws IOException {
         FileInputStream inputStream = new FileInputStream(this.sourcefile.getFile());
 
         byte[] chunk = new byte[chunkSize];
@@ -26,19 +26,19 @@ public class FileDivider {
         return chunk;
     }
 
-    public Chunk createChunk(long from, long to) throws IOException {
-        Long fileLength = sourcefile.getFile().length();
-        if(from < 0 || from > fileLength || to > fileLength) {
-            throw new IllegalArgumentException("Invalid range. Check file size");
+    public Chunk createChunk(int chunkId) throws IOException {
+        if(chunkId < 0 || chunkId > sourcefile.getChunkAmount()) {
+            throw new IllegalArgumentException("Invalid chunkId");
         }
 
         try {
-            Integer chunkSize = Math.toIntExact(to - from);
+            Integer chunkSize = this.sourcefile.getChunkSize();
+            Integer from = chunkId * chunkSize;
             byte[] data = getChunk(from, chunkSize);
             byte[] sha256 = MessageDigest.getInstance("SHA-1").digest(data);
 
 
-            return new Chunk(sourcefile, sha256, from, to, data);
+            return new Chunk(sourcefile, sha256, data, chunkId);
         } catch (NoSuchAlgorithmException e) {
         }
         return null;
