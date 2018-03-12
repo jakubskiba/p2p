@@ -1,5 +1,6 @@
 import model.Chunk;
 import model.Sourcefile;
+import service.ChunkManager;
 import service.FileDivider;
 import service.FileMerger;
 
@@ -16,28 +17,13 @@ public class App {
         File file = new File(fromPath);
         Sourcefile sourcefile = new Sourcefile(file);
 
-        File chunksDir = new File(".chunks/");
-        if(!chunksDir.exists()) {
-            chunksDir.mkdir();
-        }
-
-        File directory = new File(".chunks/" + sourcefile.getSha256() +"/");
-        if(!directory.exists()) {
-            directory.mkdir();
-        }
-
-        int chunkAmount = sourcefile.getChunkAmount();
 
         //divide file
         FileDivider fileDivider = new FileDivider(sourcefile);
-
-        for(Integer i = 0; i<chunkAmount; i++) {
-
-            File chunkFile = new File(directory.getCanonicalPath() + "/" + i.toString());
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chunkFile));
+        ChunkManager chunkManager = new ChunkManager();
+        for(Integer i = 0; i<sourcefile.getChunkAmount(); i++) {
             Chunk chunk = fileDivider.createChunk(i);
-            oos.writeObject(chunk);
-            oos.close();
+            chunkManager.saveChunk(chunk);
         }
 
         //merge file
