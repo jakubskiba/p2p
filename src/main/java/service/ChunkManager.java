@@ -38,6 +38,18 @@ public class ChunkManager {
         return true;
     }
 
+    public void removeAllChunks(Sourcefile sourcefile) {
+        String sha256sum = sourcefile.getSha256();
+        String directoryPath = getChunkDirPath(sha256sum);
+
+        for(int i = 0; i<sourcefile.getChunkAmount(); i++) {
+            File chunkFile = new File(directoryPath + String.valueOf(i));
+            if(chunkFile.exists()) {
+                chunkFile.delete();
+            }
+        }
+    }
+
     private File createDirIfNotExist(String path) {
         File dir = new File(path);
         if(!dir.exists()) {

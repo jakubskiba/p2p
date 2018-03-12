@@ -29,6 +29,7 @@ public class App {
         //merge file
         if(chunkManager.hasAllChunks(sourcefile)) {
             new FileMerger().mergeChunks(sourcefile.getSha256(), toPath);
+            chunkManager.removeAllChunks(sourcefile);
         }
 
 
