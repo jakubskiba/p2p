@@ -1,3 +1,4 @@
+import controller.SourcefileController;
 import model.Chunk;
 import model.Sourcefile;
 import service.ChunkManager;
@@ -11,6 +12,10 @@ import java.io.ObjectOutputStream;
 
 public class App {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        SourcefileController sfController = new SourcefileController();
+        sfController.loadSourcefiles();
+        sfController.getAll().forEach(System.out::println);
+
         String fromPath = "/home/kyubu/DSC08863.JPG";
         String toPath = "/home/kyubu/DSC08863-x.JPG";
 
