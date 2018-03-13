@@ -20,7 +20,7 @@ public class ChunkSender {
 
     {
         try {
-            sourceFile = new Sourcefile(new File("ubuntu-17.10.1-desktop-amd64.iso"));
+            sourceFile = new Sourcefile(new File("/home/kyubu/ubuntu-16.04.3-desktop-amd64.iso"));
         } catch (IOException e) {
             e.printStackTrace();
         }

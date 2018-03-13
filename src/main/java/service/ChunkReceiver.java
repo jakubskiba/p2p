@@ -12,8 +12,13 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class ChunkReceiver {
-    private static int port = 8000;
-    private static String host = "localhost";
+    private int port;
+    private String host;
+
+    public ChunkReceiver(int port, String host) {
+        this.port = port;
+        this.host = host;
+    }
 
     public Chunk getChunk(Sourcefile sourcefile, int chunkId) {
         Chunk chunk = null;
