@@ -3,6 +3,7 @@ package service;
 import model.Chunk;
 import model.ChunkEnvelope;
 import model.ChunkRequest;
+import model.Sourcefile;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,13 +15,13 @@ public class ChunkReceiver {
     private static int port = 8000;
     private static String host = "localhost";
 
-    public Chunk getChunk(long from, long to) {
+    public Chunk getChunk(Sourcefile sourcefile, int chunkId) {
         Chunk chunk = null;
 
         try (
                 Socket serverSocket = new Socket(host, port)
         ) {
-            ChunkRequest chunkRequest = new ChunkRequest(from, to);
+            ChunkRequest chunkRequest = new ChunkRequest(sourcefile, chunkId);
             this.sendRequest(serverSocket, chunkRequest);
             chunk = this.receiveChunk(serverSocket);
         } catch (SocketException e) {

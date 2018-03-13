@@ -3,27 +3,27 @@ package model;
 import java.io.Serializable;
 
 public class ChunkRequest implements Serializable{
-    private long from;
-    private long to;
+    private int id;
+    private Sourcefile sourcefile;
 
-    public ChunkRequest(long from, long to) {
-        this.from = from;
-        this.to = to;
+    public ChunkRequest(Sourcefile sourcefile, int id) {
+        this.sourcefile = sourcefile;
+        this.id = id;
     }
 
-    public long getFrom() {
-        return from;
+    public int getId() {
+        return id;
     }
 
-    public void setFrom(long from) {
-        this.from = from;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public long getTo() {
-        return to;
+    public Sourcefile getSourcefile() {
+        return sourcefile;
     }
 
-    public void setTo(long to) {
-        this.to = to;
+    public void setSourcefile(Sourcefile sourcefile) {
+        this.sourcefile = sourcefile;
     }
 }

@@ -66,10 +66,9 @@ public class ChunkSender {
     private void send(Socket clientSocket, ChunkRequest chunkRequest) throws IOException {
         try (ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream())) {
             System.out.println("Connection established");
-            long from = chunkRequest.getFrom();
-            long to = chunkRequest.getTo();
+            int chunkId = chunkRequest.getId();
 
-            Chunk chunk = new FileDivider(this.sourceFile).createChunk(from, to);
+            Chunk chunk = new FileDivider(this.sourceFile).createChunk(chunkId);
             ChunkEnvelope chunkEnvelope = new ChunkEnvelope(chunk);
             out.writeObject(chunkEnvelope);
             out.flush();
