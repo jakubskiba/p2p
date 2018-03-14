@@ -34,11 +34,11 @@ public class ChunkReceiver {
         try {
             ChunkEnvelope chunkEnvelope = (ChunkEnvelope) ois.readObject();
             chunk = chunkEnvelope.getChunk();
-            ois.close();
-            oos.close();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
+
+        ois.close();
+        oos.close();
 
         return chunk;
     }

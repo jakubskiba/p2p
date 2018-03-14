@@ -23,6 +23,8 @@ public class FileDivider {
         inputStream.read(chunk);
         inputStream.skip(inputStream.available());
 
+        inputStream.close();
+
         return chunk;
     }
 

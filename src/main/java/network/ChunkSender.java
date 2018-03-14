@@ -41,8 +41,9 @@ public class ChunkSender {
                 oos.close();
                 ois.close();
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                ois.close();
             }
+            this.socket.close();
         }
     }
 
