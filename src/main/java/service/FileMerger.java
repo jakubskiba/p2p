@@ -19,12 +19,14 @@ public class FileMerger {
         Arrays.sort(listOfFiles, Comparator.comparing(file -> Integer.valueOf(file.getName())));
 
         for(File chunkFile : listOfFiles) {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(chunkFile));
+            FileInputStream file = new FileInputStream(chunkFile);
+            ObjectInputStream in = new ObjectInputStream(file);
 
             Chunk chunk = (Chunk) in.readObject();
 
             out.write(chunk.getData());
             in.close();
+            file.close();
         }
         out.close();
     }
