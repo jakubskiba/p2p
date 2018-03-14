@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Manifest implements Serializable {
+    private static final long serialVersionUID = 8708366516871711422L;
+
     private Map<String, Sourcefile> sourcefiles = new Hashtable<>();
 
     public void addSourcefile(Sourcefile sourcefile) {

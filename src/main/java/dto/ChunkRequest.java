@@ -1,8 +1,12 @@
-package model;
+package dto;
+
+import model.Sourcefile;
 
 import java.io.Serializable;
 
 public class ChunkRequest implements Serializable{
+    private static final long serialVersionUID = 4277788104230526087L;
+
     private int id;
     private Sourcefile sourcefile;
 
