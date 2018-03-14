@@ -31,6 +31,7 @@ public class Sourcefile implements Serializable {
     }
 
     public String computeSHA() throws IOException {
+        System.out.println("computing sha of: " + this.file.getName());
         Process p = Runtime.getRuntime().exec("sha256sum "+this.file.getCanonicalPath());
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(p.getInputStream()));
