@@ -1,14 +1,15 @@
 package network;
 
 import model.Chunk;
-import model.ChunkEnvelope;
-import model.ChunkRequest;
+import dto.ChunkEnvelope;
+import dto.ChunkRequest;
 import model.Sourcefile;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Optional;
 
 public class ChunkReceiver {
     private String host;
@@ -20,8 +21,8 @@ public class ChunkReceiver {
         this.port = port;
     }
 
-    public Chunk receive(Sourcefile sourcefile, int chunkId) throws IOException {
-        Chunk chunk = null;
+    public Optional<Chunk> receive(Sourcefile sourcefile, int chunkId) throws IOException {
+        Optional<Chunk> chunk = Optional.ofNullable(null);
 
         this.clientSocket = new Socket(this.host, this.port);
         ObjectOutputStream oos = new ObjectOutputStream(this.clientSocket.getOutputStream());
