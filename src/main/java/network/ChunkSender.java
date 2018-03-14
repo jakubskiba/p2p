@@ -1,8 +1,8 @@
 package network;
 
 import model.Chunk;
-import model.ChunkEnvelope;
-import model.ChunkRequest;
+import dto.ChunkEnvelope;
+import dto.ChunkRequest;
 import model.Sourcefile;
 import service.FileDivider;
 
