@@ -11,7 +11,8 @@ public class ChunkManager {
 
     public void saveChunk(Chunk chunk) throws IOException {
         createDirIfNotExist(CHUNKS_DIR_PATH);
-        String directoryPath = getChunkDirPath(chunk.getSourcefile().getSha256());
+        Sourcefile sourcefile = chunk.getSourcefile();
+        String directoryPath = getChunkDirPath(sourcefile.getSha256());
         File directory = createDirIfNotExist(directoryPath);
 
         File chunkFile = new File(directory.getCanonicalPath() + "/" + chunk.getChunkId());
