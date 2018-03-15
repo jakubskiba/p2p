@@ -2,38 +2,23 @@ package dto;
 
 import enumeration.RequestType;
 import model.Manifest;
+import service.ByteArraySerializer;
 
 import java.io.*;
 
 public class Request implements Serializable {
-    private static final long serialVersionUID = -6378619089115000184L;
-
+    private static final long serialVersionUID = 3251874664011502924L;
     private RequestType type;
     private byte[] data;
 
     public Request(ChunkRequest chunkRequest) throws IOException {
         this.type = RequestType.CHUNK_REQUEST;
-        this.data = serializeToByteArray(chunkRequest);
+        this.data = ByteArraySerializer.serializeToByteArray(chunkRequest);
     }
 
     public Request(Manifest manifest) throws IOException {
         this.type = RequestType.MANIFEST_REQUEST;
-        this.data = serializeToByteArray(manifest);
-    }
-
-    private byte[] serializeToByteArray(Object object) throws IOException {
-        byte[] data;
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-
-        oos.writeObject(object);
-        data = baos.toByteArray();
-
-        oos.close();
-        baos.close();
-
-        return data;
+        this.data = ByteArraySerializer.serializeToByteArray(manifest);
     }
 
     public static long getSerialVersionUID() {
@@ -56,14 +41,8 @@ public class Request implements Serializable {
         this.data = data;
     }
 
-    private Object deserializeData() throws IOException, ClassNotFoundException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(this.data);
-        ObjectInputStream oos = new ObjectInputStream(bais);
-        return oos.readObject();
-    }
-
     public Manifest getManifest() throws IOException, ClassNotFoundException {
-        Object deserializedObject = deserializeData();
+        Object deserializedObject = ByteArraySerializer.deserializeData(this.data);
         if(deserializedObject instanceof Manifest) {
             return (Manifest) deserializedObject;
         } else {
@@ -72,11 +51,11 @@ public class Request implements Serializable {
     }
 
     public ChunkRequest getChunkRequest() throws IOException, ClassNotFoundException {
-        Object deserializedObject = deserializeData();
+        Object deserializedObject = ByteArraySerializer.deserializeData(this.data);
         if(deserializedObject instanceof ChunkRequest) {
             return (ChunkRequest) deserializedObject;
         } else {
-            throw new IllegalStateException("Data is not manifest!");
+            throw new IllegalStateException("Data is not chunk request!");
         }
     }
 }
