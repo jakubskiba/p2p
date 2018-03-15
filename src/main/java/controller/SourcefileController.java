@@ -3,12 +3,15 @@ package controller;
 import enumeration.ChunkStatus;
 import model.Manifest;
 import model.Sourcefile;
+import network.Server;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.*;
 
 public class SourcefileController {
     private static final String SOURCEFILE_LIST_PATH = ".sourcefiles";
+    private static final Logger logger = Logger.getLogger(Server.class);
 
     private Manifest manifest = new Manifest();
 
@@ -24,6 +27,7 @@ public class SourcefileController {
             addSourcefileFromFile(filePath);
         }
         in.close();
+        logger.info("sourcefiles loaded");
     }
 
     public void addSourcefileFromFile(String filePath) throws IOException {
@@ -48,11 +52,15 @@ public class SourcefileController {
     }
 
 
-    public Sourcefile getSourcefile(String sha256sum) {
-        return this.manifest.getSourcefile(sha256sum);
+    public Optional<Sourcefile> getSourcefile(String sha256sum) {
+        return Optional.ofNullable(this.manifest.getSourcefile(sha256sum));
     }
 
     public List<Sourcefile> getAll() {
         return this.manifest.getAll();
+    }
+
+    public Manifest getManifest() {
+        return manifest;
     }
 }
