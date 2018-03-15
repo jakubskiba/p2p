@@ -11,7 +11,7 @@ public class Sourcefile implements Serializable {
     private static final int KILO_BYTE = 1024*1024;
     private static final int MEGA_BYTE = 1024*1024*1024;
     private static final long serialVersionUID = -8406180266325923349L;
-    
+
     private static final Logger logger = Logger.getLogger(Sourcefile.class);
 
     private File file;
@@ -35,8 +35,8 @@ public class Sourcefile implements Serializable {
         Integer chunkSize = (int) this.file.length() / 500;
         if(chunkSize < KILO_BYTE) {
             chunkSize = KILO_BYTE;
-        } else if (chunkSize > MEGA_BYTE) {
-            chunkSize = MEGA_BYTE;
+        } else if (chunkSize > MEGA_BYTE * 10) {
+            chunkSize = MEGA_BYTE * 10;
         }
 
         return chunkSize;
