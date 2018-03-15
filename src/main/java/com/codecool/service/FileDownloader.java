@@ -3,12 +3,14 @@ package com.codecool.service;
 import com.codecool.controller.PeerController;
 import com.codecool.controller.SourcefileController;
 import com.codecool.enumeration.ChunkStatus;
+import com.codecool.enumeration.Form;
 import com.codecool.model.Chunk;
 import com.codecool.model.Peer;
 import com.codecool.model.Sourcefile;
 import com.codecool.network.Client;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,6 +67,8 @@ public class FileDownloader implements Runnable {
             if(sha256sum.equals(realSha256sum)) {
                 logger.info("sha sum matching");
                 logger.info("save file to: "+destinationPath);
+                sourcefile.setFile(new File(destinationPath));
+                sourcefile.setForm(Form.FILE);
                 this.chunkManager.removeAllChunks(sourcefile);
             } else {
                 logger.error("sha sum not matching");
