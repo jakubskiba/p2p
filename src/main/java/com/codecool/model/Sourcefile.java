@@ -8,8 +8,10 @@ import java.io.*;
 import java.util.stream.Stream;
 
 public class Sourcefile implements Serializable {
-    private static final int CHUNK_SIZE = 10240;
+    private static final int KILO_BYTE = 1024*1024;
+    private static final int MEGA_BYTE = 1024*1024*1024;
     private static final long serialVersionUID = -8406180266325923349L;
+    
     private static final Logger logger = Logger.getLogger(Sourcefile.class);
 
     private File file;
@@ -21,12 +23,23 @@ public class Sourcefile implements Serializable {
 
     public Sourcefile(File file) throws IOException {
         this.file = file;
-        this.chunkSize = CHUNK_SIZE;
+        this.chunkSize = computeChunkSize();
         this.chunkAmount = (int) Math.ceil(file.length() / chunkSize);
         this.chunkAmount += 1;
         this.sha256 = computeSHA();
         this.chunkStatus = populateChunkStatus(ChunkStatus.COMPLETE);
         this.form = Form.FILE;
+    }
+
+    private int computeChunkSize() {
+        Integer chunkSize = (int) this.file.length() / 500;
+        if(chunkSize < KILO_BYTE) {
+            chunkSize = KILO_BYTE;
+        } else if (chunkSize > MEGA_BYTE) {
+            chunkSize = MEGA_BYTE;
+        }
+
+        return chunkSize;
     }
 
     public Sourcefile(Sourcefile sourcefile, Form form) {
