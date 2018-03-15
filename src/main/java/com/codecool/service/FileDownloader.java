@@ -44,6 +44,12 @@ public class FileDownloader implements Runnable {
         populateQueue();
         logger.debug(sourcefile.getChunkAmount());
         logger.info("Start download: " + sourcefile.toString());
+        downloadFile();
+        logger.info("end downloading file");
+        mergeAndClean();
+    }
+
+    private void downloadFile() {
         while (!sourcefile.isComplete()) {
             String sha256sum = this.sourcefile.getSha256();
             Integer nextChunkId = getNextChunkId();
@@ -59,7 +65,9 @@ public class FileDownloader implements Runnable {
 
             }
         }
-        logger.info("end downloading file");
+    }
+
+    private void mergeAndClean() {
         String sha256sum = sourcefile.getSha256();
         try {
             this.fileMerger.mergeChunks(sha256sum, destinationPath);
@@ -69,6 +77,7 @@ public class FileDownloader implements Runnable {
                 logger.info("save file to: "+destinationPath);
                 sourcefile.setFile(new File(destinationPath));
                 sourcefile.setForm(Form.FILE);
+                sourcefileController.saveSourcefiles();
                 this.chunkManager.removeAllChunks(sourcefile);
             } else {
                 logger.error("sha sum not matching");
@@ -89,9 +98,9 @@ public class FileDownloader implements Runnable {
         try {
             Chunk chunk = client.getChunk(this.sourcefile, chunkId);
             saveChunkIfValid(chunk);
-        }  catch (ClassNotFoundException e) {
-            logger.error(e);
         } catch (IOException e) {
+            logger.error(e);
+        } catch (ClassNotFoundException e) {
             logger.error(e);
         }
     }
