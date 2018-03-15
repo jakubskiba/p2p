@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public class Sourcefile implements Serializable {
     private static final int KILO_BYTE = 1024*1024;
     private static final int MEGA_BYTE = 1024*1024*1024;
-    private static final long serialVersionUID = -8406180266325923349L;
+    private static final long serialVersionUID = -8406180266325923348L;
 
     private static final Logger logger = Logger.getLogger(Sourcefile.class);
 
@@ -32,11 +32,11 @@ public class Sourcefile implements Serializable {
     }
 
     private int computeChunkSize() {
-        Integer chunkSize = (int) this.file.length() / 500;
-        if(chunkSize < KILO_BYTE) {
-            chunkSize = KILO_BYTE;
-        } else if (chunkSize > MEGA_BYTE * 10) {
-            chunkSize = MEGA_BYTE * 10;
+        Integer chunkSize = (int) this.file.length() / 100;
+        if(chunkSize < 100 * KILO_BYTE) {
+            chunkSize = 100 * KILO_BYTE;
+        } else if (chunkSize > 30 * MEGA_BYTE) {
+            chunkSize = 30 * MEGA_BYTE;
         }
 
         return chunkSize;
