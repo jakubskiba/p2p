@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 public class Sourcefile implements Serializable {
     private static final int CHUNK_SIZE = 10240;
-    private static final long serialVersionUID = -1626632555858035641L;
+    private static final long serialVersionUID = -8406180266325923349L;
     private static final Logger logger = Logger.getLogger(Sourcefile.class);
 
     private File file;
@@ -23,6 +23,7 @@ public class Sourcefile implements Serializable {
         this.file = file;
         this.chunkSize = CHUNK_SIZE;
         this.chunkAmount = (int) Math.ceil(file.length() / chunkSize);
+        this.chunkAmount += 1;
         this.sha256 = computeSHA();
         this.chunkStatus = populateChunkStatus(ChunkStatus.COMPLETE);
         this.form = Form.FILE;

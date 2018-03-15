@@ -45,7 +45,7 @@ public class Server implements Runnable {
 
     private void startServer() throws IOException, ClassNotFoundException {
         this.serverSocket = new ServerSocket(this.port);
-        this.serverSocket.setSoTimeout(30000);
+//        this.serverSocket.setSoTimeout(30000);
         this.isRunning = true;
         while (isRunning) {
             try {

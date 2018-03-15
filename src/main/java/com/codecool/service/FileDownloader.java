@@ -40,6 +40,7 @@ public class FileDownloader implements Runnable {
     @Override
     public void run() {
         populateQueue();
+        logger.debug(sourcefile.getChunkAmount());
         logger.info("Start download: " + sourcefile.toString());
         while (!sourcefile.isComplete()) {
             String sha256sum = this.sourcefile.getSha256();
@@ -56,6 +57,7 @@ public class FileDownloader implements Runnable {
 
             }
         }
+        logger.info("end downloading file");
         String sha256sum = sourcefile.getSha256();
         try {
             String realSha256sum = sourcefile.computeSHA();
