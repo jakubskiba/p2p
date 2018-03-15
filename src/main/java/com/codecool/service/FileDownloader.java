@@ -60,10 +60,16 @@ public class FileDownloader implements Runnable {
         logger.info("end downloading file");
         String sha256sum = sourcefile.getSha256();
         try {
+            this.fileMerger.mergeChunks(sha256sum, destinationPath);
             String realSha256sum = sourcefile.computeSHA();
             if(sha256sum.equals(realSha256sum)) {
-                this.fileMerger.mergeChunks(sha256sum, destinationPath);
+                logger.info("sha sum matching");
+                logger.info("save file to: "+destinationPath);
                 this.chunkManager.removeAllChunks(sourcefile);
+            } else {
+                logger.error("sha sum not matching");
+                logger.error("real sum: " + realSha256sum);
+                logger.error("remote sum: " + sha256sum);
             }
         } catch (IOException | ClassNotFoundException e) {
             logger.error(e.getMessage());
