@@ -2,13 +2,15 @@ package model;
 
 import enumeration.ChunkStatus;
 import enumeration.Form;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.stream.Stream;
 
 public class Sourcefile implements Serializable {
-    private static final int CHUNK_SIZE = 1024;
+    private static final int CHUNK_SIZE = 10240;
     private static final long serialVersionUID = -1626632555858035641L;
+    private static final Logger logger = Logger.getLogger(Sourcefile.class);
 
     private File file;
     private int chunkSize;
@@ -26,6 +28,19 @@ public class Sourcefile implements Serializable {
         this.form = Form.FILE;
     }
 
+    public Sourcefile(Sourcefile sourcefile, Form form) {
+        this.file = sourcefile.getFile();
+        this.chunkSize = sourcefile.getChunkSize();
+        this.chunkAmount = sourcefile.getChunkAmount();
+        this.sha256 = sourcefile.sha256;
+        this.form = form;
+        if(form == Form.FILE) {
+            this.chunkStatus = populateChunkStatus(ChunkStatus.COMPLETE);
+        } else if(form == Form.CHUNKS) {
+            this.chunkStatus = populateChunkStatus(ChunkStatus.VOID);
+        }
+    }
+
     public ChunkStatus[] populateChunkStatus(ChunkStatus status) {
         ChunkStatus[] list = new ChunkStatus[this.chunkAmount];
 
@@ -37,22 +52,21 @@ public class Sourcefile implements Serializable {
     }
 
     public boolean isComplete() {
-        return Stream.of(this.chunkStatus)
-                .filter(status -> status != ChunkStatus.COMPLETE)
-                .findAny()
-                .isPresent();
+        return  Stream.of(this.chunkStatus)
+                        .allMatch(status -> status.equals(ChunkStatus.COMPLETE));
     }
 
     @Override
     public String toString() {
-        return file.toString() + " " + sha256;
+        String isComplete = isComplete() ? "completed" : "downloading";
+        return String.format("file: %s, sum: %s, status: %s", file.getName(), sha256, isComplete);
     }
 
     public String computeSHA() throws IOException {
         if (file == null) {
             throw new IllegalArgumentException("No file!");
         }
-        System.out.println("computing sha of: " + this.file.getName());
+        logger.info("computing sha of: " + this.file.getName());
         Process p = Runtime.getRuntime().exec("sha256sum "+this.file.getCanonicalPath());
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(p.getInputStream()));
@@ -101,5 +115,11 @@ public class Sourcefile implements Serializable {
         if(chunkNumber > this.chunkAmount || chunkNumber < 0) {
             throw new IllegalArgumentException("No such chunk");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Sourcefile &&
+                this.getSha256().equals(((Sourcefile)o).getSha256());
     }
 }
