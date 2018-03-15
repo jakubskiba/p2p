@@ -50,7 +50,7 @@ public class PeerController {
             sourcefiles.addAll(manifest.getAll());
         }
 
-        return sourcefiles;
+        return new ArrayList<>(new HashSet<>(sourcefiles));
     }
 
     public List<Peer> getOwners(String sha256sum, Integer chunkId) {

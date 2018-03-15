@@ -8,8 +8,8 @@ import java.io.*;
 import java.util.stream.Stream;
 
 public class Sourcefile implements Serializable {
-    private static final int KILO_BYTE = 1024*1024;
-    private static final int MEGA_BYTE = 1024*1024*1024;
+    private static final int KILO_BYTE = 1024;
+    private static final int MEGA_BYTE = 1024*1024;
     private static final long serialVersionUID = -8406180266325923348L;
 
     private static final Logger logger = Logger.getLogger(Sourcefile.class);
@@ -135,5 +135,10 @@ public class Sourcefile implements Serializable {
     public boolean equals(Object o) {
         return o instanceof Sourcefile &&
                 this.getSha256().equals(((Sourcefile)o).getSha256());
+    }
+
+    @Override
+    public int hashCode() {
+        return sha256 != null ? sha256.hashCode() : 0;
     }
 }

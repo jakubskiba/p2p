@@ -20,7 +20,7 @@ public class ChunkFinder {
         String sha256sum = chunkRequest.getSourcefile().getSha256();
         Optional<Sourcefile> sourcefile = this.sourcefileController.getSourcefile(sha256sum);
         if(sourcefile.isPresent()) {
-            return Optional.of(new FileDivider(sourcefile.get()).createChunk(chunkId));
+            return Optional.of(new FileDivider(sourcefile.get(), this.sourcefileController).createChunk(chunkId));
         } else {
             return Optional.empty();
         }
